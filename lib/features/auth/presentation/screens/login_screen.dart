@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../domain/repository_protocols/auth_repository_protocol.dart';
+import '../state/login.store.dart';
 import '../widgets/custom_text_form_field_label.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,6 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authRepository = Provider.of<AuthRepositoryProtocol>(context, listen: false);
+    final LoginStore loginStore = LoginStore(authRepository);
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -55,27 +62,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       const CustomTextFormFieldLabel(
                         text: "Usuário",
                       ),
-                      TextFormField(
-                        focusNode: _loginUsernameFocus,
-                        controller: _loginUsernameController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person),
+                      Observer(
+                        builder: (_) => TextFormField(
+                          focusNode: _loginUsernameFocus,
+                          controller: _loginUsernameController,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                          ),
+                          onEditingComplete: () {
+                            FocusScope.of(context).requestFocus(_passwordFocus);
+                          },
+                          onChanged: loginStore.setLoginUsername,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, digite um nome de usuário.';
+                            }
+                            if (value.length > 20) {
+                              return 'O nome de usuário não pode ter mais de 20 caracteres.';
+                            }
+                            if (value.endsWith(' ')) {
+                              return 'O nome de usuário não pode terminar com espaço.';
+                            }
+                            return null;
+                          },
                         ),
-                        onEditingComplete: () {
-                          FocusScope.of(context).requestFocus(_passwordFocus);
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, digite um nome de usuário.';
-                          }
-                          if (value.length > 20) {
-                            return 'O nome de usuário não pode ter mais de 20 caracteres.';
-                          }
-                          if (value.endsWith(' ')) {
-                            return 'O nome de usuário não pode terminar com espaço.';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(
                         height: 16,
@@ -83,47 +93,62 @@ class _LoginScreenState extends State<LoginScreen> {
                       const CustomTextFormFieldLabel(
                         text: "Senha",
                       ),
-                      TextFormField(
-                        focusNode: _passwordFocus,
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
+                      Observer(
+                        builder: (_) => TextFormField(
+                          focusNode: _passwordFocus,
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                          ),
+                          onEditingComplete: () {
+                            FocusScope.of(context).requestFocus(_loginButtonFocus);
+                          },
+                          onChanged: loginStore.setPassword,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, digite uma senha.';
+                            }
+                            if (value.length < 2) {
+                              return 'A senha deve ter pelo menos 2 caracteres.';
+                            }
+                            if (value.length > 20) {
+                              return 'A senha não pode ter mais de 20 caracteres.';
+                            }
+                            if (value.endsWith(' ')) {
+                              return 'A senha não pode terminar com espaço.';
+                            }
+                            if (!_isAlphanumeric(value)) {
+                              return 'A senha deve conter apenas letras e números.';
+                            }
+                            return null;
+                          },
                         ),
-                        onEditingComplete: () {
-                          FocusScope.of(context).requestFocus(_loginButtonFocus);
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, digite uma senha.';
-                          }
-                          if (value.length < 2) {
-                            return 'A senha deve ter pelo menos 2 caracteres.';
-                          }
-                          if (value.length > 20) {
-                            return 'A senha não pode ter mais de 20 caracteres.';
-                          }
-                          if (value.endsWith(' ')) {
-                            return 'A senha não pode terminar com espaço.';
-                          }
-                          if (!_isAlphanumeric(value)) {
-                            return 'A senha deve conter apenas letras e números.';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(
                         height: 24,
                       ),
                       SizedBox(
                         width: 120,
-                        child: ElevatedButton(
-                          focusNode: _loginButtonFocus,
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {}
-                          },
-                          child: const Text("Entrar"),
-                        ),
+                        child: Observer(builder: (_) {
+                          return ElevatedButton(
+                            focusNode: _loginButtonFocus,
+                            onPressed: loginStore.isLoading
+                                ? null
+                                : () {
+                                    if (_formKey.currentState?.validate() ?? false) {
+                                      loginStore.loginUser(context);
+                                    }
+                                  },
+                            child: loginStore.isLoading
+                                ? const SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : const Text("Entrar"),
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -137,7 +162,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: const Text("Política de Privacidade"),
                   ),
-                )
+                ),
+                Observer(
+                  builder: (context) {
+                    if (loginStore.errorMessage.isNotEmpty) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(loginStore.errorMessage),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                          loginStore.setErrorMessage('');
+                        },
+                      );
+                    }
+                    return Container();
+                  },
+                ),
               ],
             ),
           ),

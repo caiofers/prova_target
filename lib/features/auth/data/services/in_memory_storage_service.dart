@@ -54,11 +54,15 @@ enum LoginErrorsCode {
 }
 
 class InMemoryAuthService {
-  final List<Map<String, dynamic>> _localUsers = [];
-  final int _delayInMilliseconds = 500;
+  final List<Map<String, dynamic>> _localUsers = [
+    {"name": "Caio", "login_username": "teste", "password": "1234"}
+  ];
+  final int _delayInMilliseconds = 1000;
   Map<String, dynamic>? _loggedInUser;
 
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> params) async {
+    await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
+
     String username = params['login_username'];
     String password = params['password'];
 
@@ -83,12 +87,13 @@ class InMemoryAuthService {
       throw ServiceException(CreateUserErrorsCode.invalidPassword.code);
     }
 
-    Future.delayed(Duration(milliseconds: _delayInMilliseconds));
     _localUsers.add(params);
     return _localUsers.firstWhere((element) => element['login_username'] == params['login_username']);
   }
 
   Future<Map<String, dynamic>> login(Map<String, dynamic> params) async {
+    await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
+
     String username = params['login_username'];
     String password = params['password'];
 
@@ -120,18 +125,17 @@ class InMemoryAuthService {
       throw ServiceException(LoginErrorsCode.wrongPassword.code);
     }
 
-    Future.delayed(Duration(milliseconds: _delayInMilliseconds));
     _loggedInUser = user;
     return _localUsers.firstWhere((element) => element['login_username'] == params['login_username']);
   }
 
   Future<void> logout() async {
-    Future.delayed(Duration(milliseconds: _delayInMilliseconds));
+    await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
     _loggedInUser = null;
   }
 
   Future<Map<String, dynamic>?> getLoggedInUser() async {
-    Future.delayed(Duration(milliseconds: _delayInMilliseconds));
+    await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
     return _loggedInUser;
   }
 

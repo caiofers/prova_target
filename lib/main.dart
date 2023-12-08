@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:prova_target/features/auth/data/repositories/auth_repository_mock.dart';
+import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
 import 'package:prova_target/features/auth/presentation/screens/login_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<AuthRepositoryProtocol>(
+          create: (_) => AuthRepositoryMock(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
