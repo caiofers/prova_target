@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:prova_target/features/auth/data/services/in_memory_storage_service.dart';
+import 'package:prova_target/features/auth/data/services/auth_service_in_memory_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,11 +15,11 @@ enum StorageErrors {
   }
 }
 
-class SharedPreferencesRecordsStorageService {
+class RecordsSharedPreferencesStorageService {
   final String _storageKey;
   final int _delayInMilliseconds = 1000;
 
-  SharedPreferencesRecordsStorageService(this._storageKey);
+  RecordsSharedPreferencesStorageService(this._storageKey);
 
   Future<String> createRecord(String text) async {
     await Future.delayed(Duration(milliseconds: _delayInMilliseconds));

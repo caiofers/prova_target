@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prova_target/features/auth/data/repositories/auth_repository_mock.dart';
+import 'package:prova_target/features/auth/data/repositories/auth_repository.dart';
 import 'package:prova_target/features/auth/domain/entities/user.dart';
 import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
 import 'package:prova_target/features/auth/domain/usecases/create_user.dart';
@@ -15,7 +15,7 @@ void main() {
     'create user tests',
     () {
       setUp(() {
-        repository = AuthRepositoryMock();
+        repository = AuthRepository();
         CreateUser(repository).execute("Caio", "testecaio", "1234");
         LoginUser(repository).execute("testecaio", "1234");
         usecase = LogoutUser(repository);

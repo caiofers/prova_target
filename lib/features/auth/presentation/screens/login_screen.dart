@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../domain/repository_protocols/auth_repository_protocol.dart';
-import '../state/login.store.dart';
+import '../states/login.store.dart';
 import '../widgets/custom_text_form_field_label.dart';
 
 class LoginScreen extends StatefulWidget {

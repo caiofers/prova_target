@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import '../../domain/exceptions/login_user_exception.dart';
+import '../../domain/exceptions/auth_exception.dart';
 import '../../domain/repository_protocols/auth_repository_protocol.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/login_user.dart';
@@ -51,7 +51,7 @@ abstract class LoginStoreBase with Store {
       isLoading = false;
       if (context.mounted) Navigator.push(context, MaterialPageRoute(builder: (_) => const Placeholder()));
       setErrorMessage('');
-    } on LoginUserException catch (e) {
+    } on AuthException catch (e) {
       isLoading = false;
       setErrorMessage(e.message);
     }

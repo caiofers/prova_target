@@ -53,7 +53,7 @@ enum LoginErrorsCode {
   }
 }
 
-class InMemoryAuthService {
+class AuthServiceInMemoryStorage {
   final List<Map<String, dynamic>> _localUsers = [
     {"name": "Caio", "login_username": "teste", "password": "1234"}
   ];

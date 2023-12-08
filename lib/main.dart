@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prova_target/features/auth/data/repositories/auth_repository_mock.dart';
+import 'package:prova_target/features/auth/data/repositories/auth_repository.dart';
 import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
 import 'package:prova_target/features/auth/presentation/screens/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         Provider<AuthRepositoryProtocol>(
-          create: (_) => AuthRepositoryMock(),
+          create: (_) => AuthRepository(),
         ),
       ],
       child: const MyApp(),

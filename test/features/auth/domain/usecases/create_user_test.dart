@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prova_target/features/auth/data/repositories/auth_repository_mock.dart';
+import 'package:prova_target/features/auth/data/repositories/auth_repository.dart';
 import 'package:prova_target/features/auth/domain/entities/user.dart';
-import 'package:prova_target/features/auth/domain/exceptions/create_user_exception.dart';
+import 'package:prova_target/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
 import 'package:prova_target/features/auth/domain/usecases/create_user.dart';
 
@@ -12,7 +12,7 @@ void main() {
     'create user tests',
     () {
       setUp(() {
-        repository = AuthRepositoryMock();
+        repository = AuthRepository();
         usecase = CreateUser(repository);
       });
       test(
@@ -29,40 +29,38 @@ void main() {
         'exception if user already exists',
         () async {
           await usecase.execute("Test", "testecaio", "1234");
-          expect(
-              () => usecase.execute("Test", "testecaio", "123456789012345678901"), throwsA(isA<CreateUserException>()));
+          expect(() => usecase.execute("Test", "testecaio", "123456789012345678901"), throwsA(isA<AuthException>()));
         },
       );
       test(
         'exception with invalid password length',
         () async {
-          expect(() => usecase.execute("Test", "testecaio", "1"), throwsA(isA<CreateUserException>()));
-          expect(() => usecase.execute("Test", "testecaio2", "123456789012345678901"),
-              throwsA(isA<CreateUserException>()));
+          expect(() => usecase.execute("Test", "testecaio", "1"), throwsA(isA<AuthException>()));
+          expect(() => usecase.execute("Test", "testecaio2", "123456789012345678901"), throwsA(isA<AuthException>()));
         },
       );
 
       test(
         'exception with invalid password',
         () async {
-          expect(() => usecase.execute("Test", "testecaio", "12!34"), throwsA(isA<CreateUserException>()));
-          expect(() => usecase.execute("Test", "testecaio2", "1234 "), throwsA(isA<CreateUserException>()));
+          expect(() => usecase.execute("Test", "testecaio", "12!34"), throwsA(isA<AuthException>()));
+          expect(() => usecase.execute("Test", "testecaio2", "1234 "), throwsA(isA<AuthException>()));
         },
       );
 
       test(
         'exception with invalid username length',
         () async {
-          expect(() => usecase.execute("Test", "t", "1234"), throwsA(isA<CreateUserException>()));
-          expect(() => usecase.execute("Test", "testecaiotestecaiotestecaioteste", "1234"),
-              throwsA(isA<CreateUserException>()));
+          expect(() => usecase.execute("Test", "t", "1234"), throwsA(isA<AuthException>()));
+          expect(
+              () => usecase.execute("Test", "testecaiotestecaiotestecaioteste", "1234"), throwsA(isA<AuthException>()));
         },
       );
 
       test(
         'exception with invalid username',
         () async {
-          expect(() => usecase.execute("Test", "testecaio ", "1234"), throwsA(isA<CreateUserException>()));
+          expect(() => usecase.execute("Test", "testecaio ", "1234"), throwsA(isA<AuthException>()));
         },
       );
     },

@@ -1,14 +1,14 @@
-import 'package:prova_target/features/auth/data/services/in_memory_storage_service.dart';
+import 'package:prova_target/features/auth/data/services/auth_service_in_memory_storage.dart';
 import 'package:prova_target/features/text_records/data/models/text_record_model.dart';
 import 'package:prova_target/features/text_records/domain/entities/text_record.dart';
 import 'package:prova_target/features/text_records/domain/exceptions/record_operations_exception.dart';
 
 import '../../domain/repository_protocols/records_repository_protocol.dart';
-import '../services/shared_preferences_records_storage_service.dart';
+import '../services/records_shared_preferences_storage_service.dart';
 
 class RecordsRepository implements RecordsRepositoryProtocol {
-  final SharedPreferencesRecordsStorageService _storageService =
-      SharedPreferencesRecordsStorageService('records_storage_key');
+  final RecordsSharedPreferencesStorageService _storageService =
+      RecordsSharedPreferencesStorageService('records_storage_key');
 
   @override
   Future<String> createRecord(String text) async {
