@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prova_target/features/auth/presentation/screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,58 +12,49 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Prova Target',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorSchemeSeed: const Color.fromRGBO(67, 189, 110, 1),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(
+              Color.fromRGBO(67, 189, 110, 1),
+            ),
+            minimumSize: MaterialStatePropertyAll(Size(80, 50)),
+            foregroundColor: MaterialStatePropertyAll(Colors.white),
+            textStyle: MaterialStatePropertyAll(
+              TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+        textButtonTheme: const TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(Colors.white),
+          ),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          contentPadding: EdgeInsets.all(8),
+          errorMaxLines: 2,
+          errorStyle: TextStyle(
+            decorationColor: Colors.amber,
+            color: Color.fromARGB(255, 255, 0, 0),
+            fontSize: 14,
+            shadows: [
+              Shadow(color: Color.fromRGBO(255, 0, 0, 1), offset: Offset(1, 1), blurRadius: 0.2),
+              Shadow(color: Color.fromRGBO(0, 0, 0, 1), offset: Offset(-1, -1), blurRadius: 0.5)
+            ],
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
+          fillColor: Colors.white,
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Login'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      home: const LoginScreen(),
     );
   }
 }
