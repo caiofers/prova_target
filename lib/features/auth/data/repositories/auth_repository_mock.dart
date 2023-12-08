@@ -36,9 +36,9 @@ class AuthRepositoryMock implements AuthRepositoryProtocol {
   }
 
   @override
-  Future<User> login(String username, String password) async {
+  Future<User> login(String loginUsername, String password) async {
     try {
-      Map<String, dynamic> params = {"login_username": username, "password": password};
+      Map<String, dynamic> params = {"login_username": loginUsername, "password": password};
 
       Map<String, dynamic> response = await authService.login(params);
       return UserModel.fromJson(response).toEntity();
