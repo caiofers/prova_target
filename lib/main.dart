@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prova_target/features/auth/data/repositories/auth_repository.dart';
 import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
+import 'package:prova_target/features/auth/domain/usecases/get_logged_user.dart';
 import 'package:prova_target/features/auth/presentation/screens/login_screen.dart';
 import 'package:prova_target/features/text_records/data/repositories/records_repository.dart';
 import 'package:prova_target/features/text_records/domain/repository_protocols/records_repository_protocol.dart';
@@ -14,9 +15,14 @@ void main() {
         Provider<AuthRepositoryProtocol>(
           create: (_) => AuthRepository(),
         ),
-        Provider<RecordsRepositoryProtocol>(
-          create: (_) => RecordsRepository(),
+        ProxyProvider<AuthRepositoryProtocol, GetLoggedUser>(
+          update: (_, authRepository, __) => GetLoggedUser(authRepository),
         ),
+        ProxyProvider<GetLoggedUser, RecordsRepositoryProtocol>(
+          update: (_, getLoggedUser, __) {
+            return RecordsRepository(getLoggedUser);
+          },
+        )
       ],
       child: const MyApp(),
     ),

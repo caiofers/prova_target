@@ -16,10 +16,16 @@ enum StorageErrors {
 }
 
 class RecordsSharedPreferencesStorageService {
-  final String _storageKey;
+  final String _baseStorageKey;
   final int _delayInMilliseconds = 1000;
 
-  RecordsSharedPreferencesStorageService(this._storageKey);
+  String _storageKey = "";
+
+  RecordsSharedPreferencesStorageService(this._baseStorageKey);
+
+  void setStorageUser(String username) {
+    _storageKey = "${username}_$_baseStorageKey";
+  }
 
   Future<String> createRecord(String text) async {
     await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
