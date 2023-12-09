@@ -31,38 +31,6 @@ mixin _$LoginStore on LoginStoreBase, Store {
     });
   }
 
-  late final _$_loginUsernameAtom =
-      Atom(name: 'LoginStoreBase._loginUsername', context: context);
-
-  @override
-  String get _loginUsername {
-    _$_loginUsernameAtom.reportRead();
-    return super._loginUsername;
-  }
-
-  @override
-  set _loginUsername(String value) {
-    _$_loginUsernameAtom.reportWrite(value, super._loginUsername, () {
-      super._loginUsername = value;
-    });
-  }
-
-  late final _$_passwordAtom =
-      Atom(name: 'LoginStoreBase._password', context: context);
-
-  @override
-  String get _password {
-    _$_passwordAtom.reportRead();
-    return super._password;
-  }
-
-  @override
-  set _password(String value) {
-    _$_passwordAtom.reportWrite(value, super._password, () {
-      super._password = value;
-    });
-  }
-
   late final _$isLoadingAtom =
       Atom(name: 'LoginStoreBase.isLoading', context: context);
 
@@ -105,28 +73,6 @@ mixin _$LoginStore on LoginStoreBase, Store {
 
   late final _$LoginStoreBaseActionController =
       ActionController(name: 'LoginStoreBase', context: context);
-
-  @override
-  void setLoginUsername(String value) {
-    final _$actionInfo = _$LoginStoreBaseActionController.startAction(
-        name: 'LoginStoreBase.setLoginUsername');
-    try {
-      return super.setLoginUsername(value);
-    } finally {
-      _$LoginStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setPassword(String value) {
-    final _$actionInfo = _$LoginStoreBaseActionController.startAction(
-        name: 'LoginStoreBase.setPassword');
-    try {
-      return super.setPassword(value);
-    } finally {
-      _$LoginStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void setErrorMessage(String value) {

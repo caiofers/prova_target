@@ -56,7 +56,7 @@ enum LoginErrorsCode {
 class AuthServiceInMemoryStorage {
   final List<Map<String, dynamic>> _localUsers = [
     {"name": "Caio", "login_username": "teste", "password": "1234"},
-    {"name": "Caio", "login_username": "teste2", "password": "1234"},
+    {"name": "Victor", "login_username": "teste2", "password": "1234"},
   ];
   final int _delayInMilliseconds = 1000;
   Map<String, dynamic>? _loggedInUser;

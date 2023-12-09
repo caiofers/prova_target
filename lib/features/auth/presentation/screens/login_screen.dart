@@ -16,15 +16,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _loginUsernameFocus = FocusNode();
   final _passwordFocus = FocusNode();
   final _loginButtonFocus = FocusNode();
-  final TextEditingController _loginUsernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   @override
   dispose() {
     _loginUsernameFocus.dispose();
     _passwordFocus.dispose();
-    _loginUsernameController.dispose();
-    _passwordController.dispose();
     _loginButtonFocus.dispose();
     super.dispose();
   }
@@ -62,14 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Observer(
                         builder: (_) => TextFormField(
                           focusNode: _loginUsernameFocus,
-                          controller: _loginUsernameController,
+                          controller: loginStore.loginUsernameController,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.person),
                           ),
                           onEditingComplete: () {
                             FocusScope.of(context).requestFocus(_passwordFocus);
                           },
-                          onChanged: loginStore.setLoginUsername,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Por favor, digite um nome de usuário.';
@@ -93,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Observer(
                         builder: (_) => TextFormField(
                           focusNode: _passwordFocus,
-                          controller: _passwordController,
+                          controller: loginStore.passwordController,
                           obscureText: true,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.lock),
@@ -101,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           onEditingComplete: () {
                             FocusScope.of(context).requestFocus(_loginButtonFocus);
                           },
-                          onChanged: loginStore.setPassword,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Por favor, digite uma senha.';
