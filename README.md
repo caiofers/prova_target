@@ -93,14 +93,56 @@ Fazer um aplicativo em Flutter que atenda os <a href="#requirements">requisitos<
 ## ✦ Padrão Arquitetural
 
 <p align="justify">
-TEXTO PENDENTE (Será preenchido após finalização da prova)
+Apesar de ser um projeto simples, utilizei Clean Arquitecture como demonstração de conhecimento, mas era possível utilizar um padrão arquitetural mais simples como um MVC (Model-View-Controller). 
+
+A vantagem de ter escolhido a arquitetura limpa é que facilitou a construção de testes unitários. Já que tudo é bem divido, foi possível criar repositório de dados para testar os casos de uso um a um.
+
+A árvore do projeto ficou dividida da seguinte forma:
+
+![image](https://github.com/caiofers/prova_target/assets/22029338/cee2468a-ef80-49ab-b9b8-a3bc0b1b1c48)
+
+Basicamente tem a pasta lib/features, onde estão concentradas as features do projeto (`auth` e `text_records`):
+- auth: toda parte de autenticação do usuário (feito em mock) e criação de usuário (em progresso - baixa prioridade já que não é um requisito do sistema);
+- text_records: toda a parte de criação, edição e exclusão de anotações;
+
+Dentro de cada feature, tem a seguinte estrutura de pastas:
+
+![image](https://github.com/caiofers/prova_target/assets/22029338/cffb97f8-8841-4fb7-96e4-b09471225491)
+
+Nessa estrutura temos, de forma resumida:
+
+- data: Camada de dados da aplicação, é a camada que gerencia de onde dados vem e onde serão salvos;
+  - models: Modelos que representam os dados em seus tipos puros, de modo a facilitar a conversão para entidade da camada de domínio e vice-versa;
+  - repositories: São os repositorios que implementam um contrato (abrastact interface) da camada de domínio, eles utilizam os serviços disponíveis;
+  - services: Abstrações dos dados para comunicação com um serviço externo ao app: encapsulam a lógica de comunicação com APIs externas, bancos de dados, ou outros serviços.
+- domain: Camada que representa todo o negócio da aplicação, independente de frontend ou backend;
+  - entities: Entidades que representam o negócio;
+  - exceptions: Exceções personalizadas para atender aos problemas que podem acontecer relacionados as regras de negócios;
+  - repository_protocols: Contratos que podem ser implementados pela camada de dados, de forma a padronizar o acesso;
+  - usecases: Casos de uso do sistema. Funcionalidades que independe da camada de apresentação. Ex: Fazer login, Criar registro, etc.
+- presentation: Camada de apresentação, tudo relacionado ao que é mostrado para o usuário.
+  - screens: Telas da feature;
+  - states: Gerenciamento de estados das telas (nesse projeto foi utilizado o mobx);
+  - widget: Pedaços de telas que podem reutilizados.
+  
 </p>
 
 <a name='tecnology'></a>
 ## ✦ Tecnologias
 
 <p align="justify">
-TEXTO PENDENTE (Será preenchido após finalização da prova)
+Pacotes utilizados e suas utilidades no projeto:
+
+- cupertino_icons: Pacote de ícones no estilo do iOS;
+- mobx: Gerenciamento de estado reativo;
+- mobx_codegen: Geração automática de código para trabalhar com MobX. Gera código para suportar as anotações @observable, @action, @computed, etc;
+- build_runner: Responsável por executar tarefas de geração de código (como mobx_codegen).
+- flutter_mobx: Integração entre o Flutter e o MobX, permitindo o uso de MobX para gerenciamento de estado no Flutter.
+- provider: Utilizado para injeção de dependência (DI) nesse projeto.
+- url_launcher: Utilizado para abrir páginas da web (abrir a página google.com.br).
+- shared_preferences: Armazenar dados de chave-valor no dispositivo usando as preferências compartilhadas.
+- uuid: Gera UUIDs (Identificadores Únicos Universais). Útil quando você precisa criar identificadores exclusivos para objetos no seu aplicativo. No projeto foi usado em conjunto com o shared_preferences para salvar os dados.
+
 </p>
 
 <a name='screens'></a>
@@ -108,8 +150,19 @@ TEXTO PENDENTE (Será preenchido após finalização da prova)
 <p align="justify">
           As imagens abaixo mostram as telas implementadas no app.
 </p>
+<div display="flex">
+  <img width=250 src="https://github.com/caiofers/prova_target/assets/22029338/ddb3c011-e526-4dcd-9141-f09ccee8ffa3">
+  <img width=250 src="https://github.com/caiofers/prova_target/assets/22029338/fa4cd379-20b6-45da-a3ef-1a151332d942">
+  <img width=250 src="https://github.com/caiofers/prova_target/assets/22029338/fd0c109d-69ab-4df1-8b1a-84e11d67c24e">
+  <img width=250 src="https://github.com/caiofers/prova_target/assets/22029338/8f830b14-68e5-4a5b-b466-6ffe601ab8d5">
+</div>
 
-IMAGENS PENDENTES (Será preenchido após finalização da prova)
+<p align="justify">
+          Vídeo de demonstração:
+</p>
+
+https://github.com/caiofers/prova_target/assets/22029338/f4693204-f7ee-49d4-ab59-7984f6f8d019
+
 
 <a name='usage'></a>
 ## ✦ Utilização
@@ -128,4 +181,18 @@ Agora que obtemos as dependências do projeto, basta executar o projeto com o co
 
 ```
 flutter run
+```
+
+<p align="justify">
+Atenção, no momento a autenticação não está utilizando uma API de verdade, somente uma API mock, então para fazer login utilize um dos usuários abaixo:
+</p>
+
+```
+Usuário: teste
+Senha: 1234
+```
+
+```
+Usuário: teste2
+Senha: 1234
 ```
