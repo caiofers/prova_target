@@ -22,7 +22,7 @@ class RecordsRepository implements RecordsRepositoryProtocol {
 
   @override
   Future<List<TextRecord>> getAllRecords() async {
-    List<Map<String, String>> recordsMap = await _storageService.getAllRecords();
+    List<Map<String, dynamic>> recordsMap = await _storageService.getAllRecords();
     return recordsMap.map((e) => TextRecordModel.fromJson(e).toEntity()).toList();
   }
 
@@ -34,7 +34,7 @@ class RecordsRepository implements RecordsRepositoryProtocol {
   @override
   Future<void> updateRecord(String id, String text) async {
     try {
-      _storageService.updateRecord(id, text);
+      await _storageService.updateRecord(id, text);
     } on ServiceException catch (e) {
       if (e.message == "NOT_FOUND") {
         throw RecordOperationsException("Registro não encontrado");

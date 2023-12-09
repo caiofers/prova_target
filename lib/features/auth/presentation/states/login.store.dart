@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 import '../../domain/exceptions/auth_exception.dart';
 import '../../domain/repository_protocols/auth_repository_protocol.dart';
 import '../../domain/entities/user.dart';
@@ -10,9 +11,7 @@ part 'login.store.g.dart';
 class LoginStore = LoginStoreBase with _$LoginStore;
 
 abstract class LoginStoreBase with Store {
-  final AuthRepositoryProtocol _repository;
-
-  LoginStoreBase(this._repository);
+  LoginStoreBase();
 
   @observable
   User? _user;
@@ -46,14 +45,29 @@ abstract class LoginStoreBase with Store {
     try {
       isLoading = true;
 
-      _user = await LoginUser(_repository).execute(_loginUsername, _password);
+      if (context.mounted) {
+        _user = await LoginUser(_getRepository(context)).execute(_loginUsername, _password);
+      } else {
+        throw Exception();
+      }
 
       isLoading = false;
-      if (context.mounted) Navigator.push(context, MaterialPageRoute(builder: (_) => const Placeholder()));
+      if (context.mounted) {
+        Navigator.pushNamed(context, '/records');
+      } else {
+        throw Exception();
+      }
       setErrorMessage('');
     } on AuthException catch (e) {
       isLoading = false;
       setErrorMessage(e.message);
+    } catch (e) {
+      isLoading = false;
+      setErrorMessage("Erro inesperado, entre em contato com o dev.");
     }
+  }
+
+  AuthRepositoryProtocol _getRepository(BuildContext context) {
+    return Provider.of<AuthRepositoryProtocol>(context, listen: false);
   }
 }

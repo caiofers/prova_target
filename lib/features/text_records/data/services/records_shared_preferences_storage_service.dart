@@ -27,7 +27,7 @@ class RecordsSharedPreferencesStorageService {
     String recordId = const Uuid().v1();
     Map<String, String> recordMap = {"id": recordId, "text": text};
 
-    List<Map<String, String>> allRecords = await getAllRecords();
+    List<Map<String, dynamic>> allRecords = await getAllRecords();
     allRecords.add(recordMap);
     String allRecordsJson = jsonEncode(allRecords);
 
@@ -37,12 +37,17 @@ class RecordsSharedPreferencesStorageService {
     return recordId;
   }
 
-  Future<List<Map<String, String>>> getAllRecords() async {
+  Future<List<Map<String, dynamic>>> getAllRecords() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? json = sharedPreferences.getString(_storageKey);
 
     if (json != null) {
-      return jsonDecode(json);
+      List<dynamic> decodedJson = jsonDecode(json) as List<dynamic>;
+      List<Map<String, dynamic>> list = decodedJson.map((e) {
+        return e as Map<String, dynamic>;
+      }).toList();
+
+      return list;
     } else {
       return [];
     }
@@ -51,7 +56,7 @@ class RecordsSharedPreferencesStorageService {
   Future<void> deleteRecord(String id) async {
     await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
 
-    List<Map<String, String>> allRecords = await getAllRecords();
+    List<Map<String, dynamic>> allRecords = await getAllRecords();
     allRecords.removeWhere((element) => element["id"] == id);
     String allRecordsJson = jsonEncode(allRecords);
 
@@ -59,10 +64,10 @@ class RecordsSharedPreferencesStorageService {
     await sharedPreferences.setString(_storageKey, allRecordsJson);
   }
 
-  Future<Map<String, String>> getRecord(String id) async {
+  Future<Map<String, dynamic>> getRecord(String id) async {
     await Future.delayed(Duration(milliseconds: _delayInMilliseconds));
 
-    List<Map<String, String>> allRecords = await getAllRecords();
+    List<Map<String, dynamic>> allRecords = await getAllRecords();
     try {
       return allRecords.firstWhere((element) => element["id"] == id);
     } on ServiceException {
@@ -82,7 +87,7 @@ class RecordsSharedPreferencesStorageService {
 
     Map<String, String> recordMap = {"id": id, "text": text};
 
-    List<Map<String, String>> allRecords = await getAllRecords();
+    List<Map<String, dynamic>> allRecords = await getAllRecords();
 
     for (int i = 0; i < allRecords.length; i++) {
       if (allRecords[i]['id'] == id) {

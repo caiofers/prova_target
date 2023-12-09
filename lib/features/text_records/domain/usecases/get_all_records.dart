@@ -7,6 +7,6 @@ class GetAllRecords {
   GetAllRecords(this._repository);
 
   Future<List<TextRecord>> execute() async {
-    return await _repository.getAllRecords();
+    return await _repository.getAllRecords().then((value) => value.reversed.toList());
   }
 }

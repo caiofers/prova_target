@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../domain/repository_protocols/auth_repository_protocol.dart';
 import '../states/login.store.dart';
 import '../widgets/custom_text_form_field_label.dart';
 
@@ -33,8 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authRepository = Provider.of<AuthRepositoryProtocol>(context, listen: false);
-    final LoginStore loginStore = LoginStore(authRepository);
+    final LoginStore loginStore = LoginStore();
 
     return Container(
       decoration: const BoxDecoration(

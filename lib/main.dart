@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:prova_target/features/auth/data/repositories/auth_repository.dart';
 import 'package:prova_target/features/auth/domain/repository_protocols/auth_repository_protocol.dart';
 import 'package:prova_target/features/auth/presentation/screens/login_screen.dart';
+import 'package:prova_target/features/text_records/data/repositories/records_repository.dart';
+import 'package:prova_target/features/text_records/domain/repository_protocols/records_repository_protocol.dart';
+import 'package:prova_target/features/text_records/presentation/screens/records_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -10,6 +13,9 @@ void main() {
       providers: [
         Provider<AuthRepositoryProtocol>(
           create: (_) => AuthRepository(),
+        ),
+        Provider<RecordsRepositoryProtocol>(
+          create: (_) => RecordsRepository(),
         ),
       ],
       child: const MyApp(),
@@ -66,7 +72,11 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      initialRoute: '/', // Rota inicial
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/records': (context) => const RecordsScreen(),
+      },
     );
   }
 }
