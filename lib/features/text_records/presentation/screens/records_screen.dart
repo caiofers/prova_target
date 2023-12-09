@@ -208,17 +208,11 @@ class _RecordsScreenState extends State<RecordsScreen> {
                               ),
                             ),
                             if (recordsStore.isLoadingAllRecords)
-                              const Positioned(
-                                top: 0.0,
-                                bottom: 0.0,
-                                right: 0.0,
-                                left: 0.0,
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 24.0,
-                                    height: 24.0,
-                                    child: CircularProgressIndicator(),
-                                  ),
+                              const Center(
+                                child: SizedBox(
+                                  width: 24.0,
+                                  height: 24.0,
+                                  child: CircularProgressIndicator(),
                                 ),
                               ),
                           ],
