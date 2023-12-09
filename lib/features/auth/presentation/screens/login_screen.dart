@@ -29,150 +29,157 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final LoginStore loginStore = LoginStore();
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color.fromRGBO(29, 77, 98, 1),
-            Color.fromRGBO(46, 148, 142, 1),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(29, 77, 98, 1),
+              Color.fromRGBO(46, 148, 142, 1),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CustomTextFormFieldLabel(
-                        text: "Usuário",
-                      ),
-                      Observer(
-                        builder: (_) => TextFormField(
-                          focusNode: _loginUsernameFocus,
-                          controller: loginStore.loginUsernameController,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.person),
-                          ),
-                          onEditingComplete: () {
-                            FocusScope.of(context).requestFocus(_passwordFocus);
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite um nome de usuário.';
-                            }
-                            if (value.length > 20) {
-                              return 'O nome de usuário não pode ter mais de 20 caracteres.';
-                            }
-                            if (value.endsWith(' ')) {
-                              return 'O nome de usuário não pode terminar com espaço.';
-                            }
-                            return null;
-                          },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CustomTextFormFieldLabel(
+                          text: "Usuário",
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      const CustomTextFormFieldLabel(
-                        text: "Senha",
-                      ),
-                      Observer(
-                        builder: (_) => TextFormField(
-                          focusNode: _passwordFocus,
-                          controller: loginStore.passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
-                          ),
-                          onEditingComplete: () {
-                            FocusScope.of(context).requestFocus(_loginButtonFocus);
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, digite uma senha.';
-                            }
-                            if (value.length < 2) {
-                              return 'A senha deve ter pelo menos 2 caracteres.';
-                            }
-                            if (value.length > 20) {
-                              return 'A senha não pode ter mais de 20 caracteres.';
-                            }
-                            if (value.endsWith(' ')) {
-                              return 'A senha não pode terminar com espaço.';
-                            }
-                            if (!_isAlphanumeric(value)) {
-                              return 'A senha deve conter apenas letras e números.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      SizedBox(
-                        width: 120,
-                        child: Observer(builder: (_) {
-                          return ElevatedButton(
-                            focusNode: _loginButtonFocus,
-                            onPressed: loginStore.isLoading
-                                ? null
-                                : () {
-                                    if (_formKey.currentState?.validate() ?? false) {
-                                      loginStore.loginUser(context);
-                                    }
-                                  },
-                            child: loginStore.isLoading
-                                ? const SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : const Text("Entrar"),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
-                  child: TextButton(
-                    onPressed: () {
-                      _launchURL("https://google.com.br");
-                    },
-                    child: const Text("Política de Privacidade"),
-                  ),
-                ),
-                Observer(
-                  builder: (context) {
-                    if (loginStore.errorMessage.isNotEmpty) {
-                      WidgetsBinding.instance.addPostFrameCallback(
-                        (_) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(loginStore.errorMessage),
-                              duration: const Duration(seconds: 2),
+                        Observer(
+                          builder: (_) => TextFormField(
+                            focusNode: _loginUsernameFocus,
+                            controller: loginStore.loginUsernameController,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.person),
                             ),
-                          );
-                          loginStore.setErrorMessage('');
-                        },
-                      );
-                    }
-                    return Container();
-                  },
-                ),
-              ],
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(_passwordFocus);
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, digite um nome de usuário.';
+                              }
+                              if (value.length > 20) {
+                                return 'O nome de usuário não pode ter mais de 20 caracteres.';
+                              }
+                              if (value.endsWith(' ')) {
+                                return 'O nome de usuário não pode terminar com espaço.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        const CustomTextFormFieldLabel(
+                          text: "Senha",
+                        ),
+                        Observer(
+                          builder: (_) => TextFormField(
+                            focusNode: _passwordFocus,
+                            controller: loginStore.passwordController,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.lock),
+                            ),
+                            onEditingComplete: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                loginStore.loginUser(context);
+                              }
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, digite uma senha.';
+                              }
+                              if (value.length < 2) {
+                                return 'A senha deve ter pelo menos 2 caracteres.';
+                              }
+                              if (value.length > 20) {
+                                return 'A senha não pode ter mais de 20 caracteres.';
+                              }
+                              if (value.endsWith(' ')) {
+                                return 'A senha não pode terminar com espaço.';
+                              }
+                              if (!_isAlphanumeric(value)) {
+                                return 'A senha deve conter apenas letras e números.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        SizedBox(
+                          width: 120,
+                          child: Observer(builder: (_) {
+                            return ElevatedButton(
+                              focusNode: _loginButtonFocus,
+                              onPressed: loginStore.isLoading
+                                  ? null
+                                  : () {
+                                      if (_formKey.currentState?.validate() ?? false) {
+                                        loginStore.loginUser(context);
+                                      }
+                                    },
+                              child: loginStore.isLoading
+                                  ? const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : const Text("Entrar"),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+                    child: TextButton(
+                      onPressed: () {
+                        _launchURL("https://google.com.br");
+                      },
+                      child: const Text("Política de Privacidade"),
+                    ),
+                  ),
+                  Observer(
+                    builder: (context) {
+                      if (loginStore.errorMessage.isNotEmpty) {
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(loginStore.errorMessage),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                            loginStore.setErrorMessage('');
+                          },
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
